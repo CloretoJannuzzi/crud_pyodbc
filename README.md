@@ -1,7 +1,7 @@
 # :snake: crud_pyodbc
 _CRUD com a biblioteca do python e SQL server._
 
-<a href=''>Acesse o código aqui!</a>
+_<a href='https://github.com/CloretoJannuzzi/crud_pyodbc/blob/main/pyodbc.py'>Acesse o código aqui!</a>_
 
 ### Esse projeto me ajuda a aprender e entender como posso fazer uma conexão com um Banco de Dados SQL Server com python e executar comandos.
 
