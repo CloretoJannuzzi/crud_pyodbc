@@ -1,6 +1,4 @@
-from re import S
 import time as t
-from unicodedata import decimal
 from click import clear
 import pyodbc as p
 
