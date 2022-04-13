@@ -179,15 +179,29 @@ def cadastro_peca():
         resp = str(input('Deseja inserir outra peça(s/n): '))
 
 
+def cadastro_pedido():
+    print('-' * 50, 'CADASTRO PEDIDO', '-' * 50)
+    id_cliente = int(input('Digite o id do cliente: '))
+    id_carro = int(input('Digite o id do carro: '))
+    inserir = '''
+        exec sp_cadastro_pedido_oficina {},{};
+    '''.format(id_cliente, id_carro)
+    cursor.execute(inserir)
+    cursor.commit()
+    clear()
+    print('Pedido Cadastrado!')
+    t.sleep(2)
+
+
 def cadastro_venda():
-    id_pepdido = int(input('Digite o número do pedido: '))
     resp = 's'
     while resp != 'n':
         clear()
+        id_pedido = int(input('Digite o número do pedido: '))
         id_orcamento = int(input('Digite o id do orçamento: '))
         inserir = '''
-            exec sp_cadastro_venda_oficina {},{}
-        '''.format(id_pepdido, id_orcamento)
+           insert into venda_oficina values ({}, {});
+        '''.format(id_pedido, id_orcamento)
         cursor.execute(inserir)
         cursor.commit()
         clear()
@@ -224,7 +238,8 @@ while op != 0 or up != 0:
         4 - Relacionar Cliente e o Carro.
         5 - Cadastrar Orçamento[loop]
         6 - Cadastrar Peças.
-        8 - Relacionar pedido e o Orçamento. 
+        7 - Cadastrar Pedido.
+        8 - Relacionar Pedido e o Orçamento. 
     '''
 
     clear()
@@ -299,11 +314,7 @@ while op != 0 or up != 0:
 
     if up == 3:
         clear()
-        cadastro_cliente()
-        clear()
-        cadastro_carro()
-        clear()
-        cadastro_cr_cl()
+        cadastro()
 
     if up == 4:
         clear()
@@ -316,6 +327,14 @@ while op != 0 or up != 0:
     if up == 6:
         clear()
         cadastro_peca()
+
+    if up == 7:
+        clear()
+        cadastro_pedido()
+
+    if up == 8:
+        clear()
+        cadastro_venda()
 
     t.sleep(1)
     clear()
