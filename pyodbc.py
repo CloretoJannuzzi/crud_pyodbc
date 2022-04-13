@@ -245,6 +245,7 @@ while op != 0 or up != 0:
     clear()
 
     print('Selecione uma opção:\n(1-listar / 2-Cadastrar / 0 - Sair)')
+    print('Dica: cadastre cliente e carro, faça a relação, orçamento, pedido e relacione pedido e orçamento')
     resposta = int(input('Digite sua opção: '))
 
     if resposta == 1:
