@@ -1,8 +1,9 @@
+from re import S
 import time as t
+from unicodedata import decimal
 from click import clear
 import pyodbc as p
 
-# Em desenvolvimento.
 # [] criar uma view para a tabela cliente_x_carro para ser mais legivel.
 
 # conexão com o banco de dados, sem autenticação
@@ -63,6 +64,15 @@ def lista_pedido():
 def lista_orcamento():
     lista = '''
         select * from orcamento_oficina order by id_orcamento desc;
+    '''
+    cursor.execute(lista)
+    for linha in cursor.fetchall():
+        print(linha)
+
+
+def lista_peca():
+    lista = '''
+        select * from peca_oficina order by id_peca desc;
     '''
     cursor.execute(lista)
     for linha in cursor.fetchall():
@@ -136,6 +146,57 @@ def cadastro():
     cadastro_cr_cl()
 
 
+def cadastro_orcamento():
+    resp = "s"
+    while resp != "n":
+        clear()
+        print('-' * 25, 'CADASTRO ORÇAMENTO', '-' * 25)
+        id_carro = int(input('Digite o Id do carro para orçamento: '))
+        id_peca = int(input('Digite o Código da peça: '))
+        qty = int(input('Digite a quantidade desta peça: '))
+        lista = '''
+            exec sp_cadastro_orcamento_oficina {},{},{};
+        '''.format(id_carro, id_peca, qty)
+        cursor.execute(lista)
+        cursor.commit()
+        clear()
+        print('\nOrçamento inserido')
+        resp = input('Deseja inserir novamente(s/n):')
+
+
+def cadastro_peca():
+    resp = "s"
+    while resp != "n":
+        clear()
+        print('-' * 50, 'CADASTRO PEÇA', '-' * 50)
+        nome = input('Digite o nome da peça: ')
+        valor = float(input('Digite o Valor unitário: '))
+        inserir = '''
+            exec sp_cadastro_peca_oficina {},{}
+        '''.format(nome, valor)
+        cursor.execute(inserir)
+        cursor.commit()
+        clear()
+        print('\nPeça inserida!')
+        resp = str(input('Deseja inserir outra peça(s/n): '))
+
+
+def cadastro_venda():
+    id_pepdido = int(input('Digite o número do pedido: '))
+    resp = 's'
+    while resp != 'n':
+        clear()
+        id_orcamento = int(input('Digite o id do orçamento: '))
+        inserir = '''
+            exec sp_cadastro_venda_oficina {},{}
+        '''.format(id_pepdido, id_orcamento)
+        cursor.execute(inserir)
+        cursor.commit()
+        clear()
+        print('\n Relação feita!')
+        resp = str(input('Deseja adicionar outro orçamento neste pedido(s/n): '))
+
+
 # menu via terminal:
 op = -1
 up = -1
@@ -151,8 +212,8 @@ while op != 0 or up != 0:
         3 - Listar Carros.
         4 - Listar Clientes x Carro.
         5 - Listar Pedidos.
-        6 x Listar Orçamento.
-        7 x Listar Peças.
+        6 - Listar Orçamento.
+        7 - Listar Peças.
     '''
     menu_cadastro = '''
 -------------------------OFICINA-------------------------
@@ -163,9 +224,9 @@ while op != 0 or up != 0:
         2 - Cadastrar Carro.
         3 - Cadastrar Cliente e o Carro.
         4 - Relacionar Cliente e o Carro.
-        5 x Cadastrar Orçamento[loop]
-        6 x Cadastrar Peças.
-        8 x Relacionar pedido e o Orçamento. 
+        5 - Cadastrar Orçamento[loop]
+        6 - Cadastrar Peças.
+        8 - Relacionar pedido e o Orçamento. 
     '''
 
     clear()
@@ -183,13 +244,14 @@ while op != 0 or up != 0:
         print(menu_cadastro)
         up = int(input('Digite sua opção:'))
 
-   # Casos:
+   # Sessão de Condições:
     if op == 0 or up == 0 or resposta == 0:
         clear()
         print('Sistema Finalizado!')
         t.sleep(2)
         break
 
+    # Lista:
     if op == 1:
         clear()
         valores()
@@ -222,6 +284,13 @@ while op != 0 or up != 0:
         print('\nId orçamento: id Carro; id Peça; Quantidade')
         input(':')
 
+    if op == 7:
+        clear()
+        lista_peca()
+        print('\n ID Peça; Nome; Valor unidade.')
+        input(':')
+
+    # Cadastro a finalizar ainda:
     if up == 1:
         clear()
         cadastro_cliente()
@@ -242,5 +311,13 @@ while op != 0 or up != 0:
         clear()
         cadastro_cr_cl()
 
-    t.sleep(2)
+    if up == 5:
+        clear()
+        cadastro_orcamento()
+
+    if up == 6:
+        clear()
+        cadastro_peca()
+
+    t.sleep(1)
     clear()
