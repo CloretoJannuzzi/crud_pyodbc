@@ -2,8 +2,6 @@ import time as t
 from click import clear
 import pyodbc as p
 
-# [] criar uma view para a tabela cliente_x_carro para ser mais legivel.
-
 # conexão com o banco de dados, sem autenticação
 server = 'DESKTOP-J0U7P4K\SQLEXPRESS'
 database = 'modelagem'
@@ -16,7 +14,7 @@ cursor = cnx.cursor()
 
 def valores():
     valor = '''
-        SELECT * FROM vw_valor_oficina
+        SELECT * FROM vw_valor_final_oficina
     '''
     cursor.execute(valor)
     for linha in cursor.fetchall():
@@ -43,7 +41,7 @@ def lista_carro():
 
 def lista_cl_cr():
     cl_cr = '''
-        SELECT * FROM cliente_carro
+        SELECT * FROM vw_cliente_carro_oficina
     '''
     cursor.execute(cl_cr)
     for linha in cursor.fetchall():
@@ -52,7 +50,7 @@ def lista_cl_cr():
 
 def lista_pedido():
     pedido = '''
-        SELECT * FROM pedido_oficina
+        SELECT * FROM vw_pedido_oficina
     '''
     cursor.execute(pedido)
     for linha in cursor.fetchall():
@@ -61,7 +59,7 @@ def lista_pedido():
 
 def lista_orcamento():
     lista = '''
-        select * from orcamento_oficina order by id_orcamento desc;
+        select * from vw_orcamento_oficina
     '''
     cursor.execute(lista)
     for linha in cursor.fetchall():
@@ -214,8 +212,17 @@ op = -1
 up = -1
 while op != 0 or up != 0:
 
+    logo = '''
+  ______    _______  __    ______  __  .__   __.      ___      
+ /  __  \  |   ____||  |  /      ||  | |  \ |  |     /   \     
+|  |  |  | |  |__   |  | |  ,----'|  | |   \|  |    /  ^  \    
+|  |  |  | |   __|  |  | |  |     |  | |  . `  |   /  /_\  \   
+|  `--'  | |  |     |  | |  `----.|  | |  |\   |  /  _____  \  
+ \______/  |__|     |__|  \______||__| |__| \__| /__/     \__\ 
+                                                               
+    '''
     menu = '''
--------------------------OFICINA-------------------------
+    {}
     Selecione uma opção para continuar:
         
         0 - Encerrar.
@@ -226,9 +233,9 @@ while op != 0 or up != 0:
         5 - Listar Pedidos.
         6 - Listar Orçamento.
         7 - Listar Peças.
-    '''
+    '''.format(logo)
     menu_cadastro = '''
--------------------------OFICINA-------------------------
+    {}
     Selecione uma opção para continuar:
         
         0 - Encerrar.
@@ -240,12 +247,12 @@ while op != 0 or up != 0:
         6 - Cadastrar Peças.
         7 - Cadastrar Pedido.
         8 - Relacionar Pedido e o Orçamento. 
-    '''
+    '''.format(logo)
 
     clear()
 
-    print('Selecione uma opção:\n(1-listar / 2-Cadastrar / 0 - Sair)')
-    print('Dica: cadastre cliente e carro, faça a relação, orçamento, pedido e relacione pedido e orçamento')
+    print('{}Selecione uma opção:\n(1-listar / 2-Cadastrar / 0 - Sair)'.format(logo))
+    print('\nDica: cadastre cliente e carro, faça a relação, orçamento, pedido e relacione pedido e orçamento.\n')
     resposta = int(input('Digite sua opção: '))
 
     if resposta == 1:
@@ -269,39 +276,43 @@ while op != 0 or up != 0:
     if op == 1:
         clear()
         valores()
+        print('\n Id Pedido - Nome - Placa - Valor Total')
         input(':')
 
     if op == 2:
         clear()
         lista_clientes()
+        print('\n Id Cliente - Nome - CEP')
         input(':')
 
     if op == 3:
         clear()
         lista_carro()
+        print('\n Id Carro - Modelo - Marca - Ano')
         input(':')
 
     if op == 4:
         clear()
         lista_cl_cr()
+        print('\n Id Cliente - Nome - Id Carro - Placa - Modelo')
         input(':')
 
     if op == 5:
         clear()
         lista_pedido()
-        print('\n Id Pedido; Id Cliente; Id Carro.')
+        print('\n Id Pedido - Nome - Placa.')
         input(':')
 
     if op == 6:
         clear()
         lista_orcamento()
-        print('\nId orçamento: id Carro; id Peça; Quantidade')
+        print('\nId orçamento - Placa - Peça - Quantidade')
         input(':')
 
     if op == 7:
         clear()
         lista_peca()
-        print('\n ID Peça; Nome; Valor unidade.')
+        print('\n ID Peça - Nome - Valor unidade.')
         input(':')
 
     # Cadastro a finalizar ainda:
