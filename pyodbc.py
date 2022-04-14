@@ -5,8 +5,8 @@ import pyodbc as p
 
 # conexão com o banco de dados, sem autenticação
 
-server = 'DESKTOP-J0U7P4K\SQLEXPRESS'
-database = 'modelagem'
+server = 'DESKTOP-J0U7P4K\SQLEXPRESS' # aqui voce digitao caminho do seu SQL, aqui esta assim: nome_meu_desktop\nome_do_meu_server
+database = 'modelagem' # aqui voce escreve qual banco de dados quer utilizar para o crud
 
 cnx = p.connect(
     'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';Trusted_connection=yes;')
@@ -253,7 +253,7 @@ while op != 0 or up != 0:
         2 - Cadastrar Carro.
         3 - Cadastrar Cliente e o Carro.
         4 - Relacionar Cliente e o Carro.
-        5 - Cadastrar Orçamento[loop]
+        5 - Cadastrar Orçamento.
         6 - Cadastrar Peças.
         7 - Cadastrar Pedido.
         8 - Relacionar Pedido e o Orçamento. 
