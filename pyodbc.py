@@ -1,25 +1,29 @@
+# importando bibliotecas, caso não tenha use pip install pelo terminal e o nome da biblioteca.
 import time as t
 from click import clear
 import pyodbc as p
 
 # conexão com o banco de dados, sem autenticação
+
 server = 'DESKTOP-J0U7P4K\SQLEXPRESS'
 database = 'modelagem'
+
 cnx = p.connect(
     'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';Trusted_connection=yes;')
 cursor = cnx.cursor()
 
 # funcoes:
 
-
 def valores():
     valor = '''
         SELECT * FROM vw_valor_final_oficina
     '''
     cursor.execute(valor)
+    # executa o comando no SQL
     for linha in cursor.fetchall():
         print(linha)
-
+    # quebra a linha para ficar mais organizado
+    
 
 def lista_clientes():
     cliente = '''
@@ -80,12 +84,15 @@ def cadastro_cliente():
     nomecl = str(input('Digite o Nome do(a) Cliente: '))
     sobrenomecl = str(input('Digite o Sobrenome do(a) Cliente: '))
     cep = str(input('Digite o CEP do(a) Cliente: '))
+    
+    # variaveis para executar um store procedure nalinha seguinte
+    
     inserircl = '''
        exec sp_cadastro_cliente_oficina '{}', '{}', '{}';
     '''.format(nomecl, sobrenomecl, cep)
     cursor.execute(inserircl)
     cursor.commit()
-    clear()
+    clear()   
     print('cliente cadastrado!')
     t.sleep(2)
 
