@@ -1,5 +1,5 @@
-# :snake: crud_pyodbc
-_CRUD com a biblioteca do python e SQL server._
+# :snake: Crud pyodbc T-SQL(SQL Server)
+_CRUD com a biblioteca do python e SQL server(T-SQL)._
 
 _<a href='https://github.com/CloretoJannuzzi/crud_pyodbc/blob/main/pyodbc.py'>Acesse o código aqui!</a>_
 
