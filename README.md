@@ -20,3 +20,7 @@ _<a href='https://github.com/CloretoJannuzzi/crud_pyodbc/blob/main/pyodbc.py'>Ac
 ### - Tela Cadastro
 ![image](https://user-images.githubusercontent.com/100159466/163472907-45a18f18-52ac-4b86-a87e-4ba459a33880.png)
 
+### - Saída de Dados
+_Aqui foi utilizado um select * from, mas também é possível utilizar condições para exibição._
+![image](https://user-images.githubusercontent.com/100159466/163473073-d5d3c479-34ce-4e2b-a7d5-c0ca52a85e32.png)
+
