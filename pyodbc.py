@@ -106,20 +106,20 @@ def cadastro_carro():
 
 def cadastro_cr_cl():
     cliente = '''
-        SELECT id_cliente, nome, sobrenome FROM cliente_oficina order by id_cliente desc;
+        SELECT id_cliente, nome, sobrenome FROM cliente_oficina
     '''
     cursor.execute(cliente)
     for linha in cursor.fetchall():
         print(linha)
-    print('Id do CLiente; Nome do Cliente.')
+    print('\nId do CLiente - Nome do Cliente.')
     input(':')
     carro = '''
-        SELECT id_carro, placa, modelo FROM carro_oficina ORDER BY id_carro DESC
+        SELECT id_carro, placa, modelo FROM carro_oficina
     '''
     cursor.execute(carro)
     for linha in cursor.fetchall():
         print(linha)
-    print('Id do Carro; Placa; Modelo.')
+    print('\nId do Carro - Placa - Modelo.')
     input(':')
     idcliente = int(input('\n digite o id do(a) cliente:'))
     idcarro = int(input('\n digite o id do carro:'))
