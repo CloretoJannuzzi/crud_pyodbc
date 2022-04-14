@@ -85,6 +85,9 @@ def cadastro_cliente():
     '''.format(nomecl, sobrenomecl, cep)
     cursor.execute(inserircl)
     cursor.commit()
+    clear()
+    print('cliente cadastrado!')
+    t.sleep(2)
 
 
 def cadastro_carro():
@@ -101,7 +104,7 @@ def cadastro_carro():
     cursor.execute(inserir_aut)
     cursor.commit()
     print('Atuomóvel inserido.')
-    input(':')
+    t.sleep(2)
 
 
 def cadastro_cr_cl():
@@ -112,7 +115,7 @@ def cadastro_cr_cl():
     for linha in cursor.fetchall():
         print(linha)
     print('\nId do CLiente - Nome do Cliente.')
-    input(':')
+    input('\nAperte Enter para continuar: ')
     carro = '''
         SELECT id_carro, placa, modelo FROM carro_oficina
     '''
@@ -120,7 +123,7 @@ def cadastro_cr_cl():
     for linha in cursor.fetchall():
         print(linha)
     print('\nId do Carro - Placa - Modelo.')
-    input(':')
+    input('\nAperte Enter para continuar: ')
     idcliente = int(input('\n digite o id do(a) cliente:'))
     idcarro = int(input('\n digite o id do carro:'))
     inserir = '''
@@ -277,43 +280,43 @@ while op != 0 or up != 0:
         clear()
         valores()
         print('\n Id Pedido - Nome - Placa - Valor Total')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 2:
         clear()
         lista_clientes()
         print('\n Id Cliente - Nome - CEP')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 3:
         clear()
         lista_carro()
         print('\n Id Carro - Modelo - Marca - Ano')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 4:
         clear()
         lista_cl_cr()
         print('\n Id Cliente - Nome - Id Carro - Placa - Modelo')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 5:
         clear()
         lista_pedido()
         print('\n Id Pedido - Nome - Placa.')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 6:
         clear()
         lista_orcamento()
         print('\nId orçamento - Placa - Peça - Quantidade')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     if op == 7:
         clear()
         lista_peca()
         print('\n ID Peça - Nome - Valor unidade.')
-        input(':')
+        input('\nAperte Enter para continuar: ')
 
     # Cadastro a finalizar ainda:
     if up == 1:
