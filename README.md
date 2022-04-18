@@ -7,6 +7,7 @@ _<a href='https://github.com/CloretoJannuzzi/crud_pyodbc/blob/main/pyodbc.py'>Ac
 
 - Automoção de Tarefas sendo eles o insert,read,delete e update.
 - Ainda em desenvolvimento.
+- Precisa de melhorias, existe vários pontos que dava para encurtar o código, porém meu foco por enquanto é terminar e ir melhorando aos poucos.
 - Meta de após a finalização é de usar outra biblioteca, talvez o PySimpleGUI para criar uma interface gráfica, ao invés de usar somente via terminal.
 
 ## _Imagens de como está:_ 
