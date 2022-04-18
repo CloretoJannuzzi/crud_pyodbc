@@ -1,29 +1,28 @@
-# importando bibliotecas, caso não tenha use pip install pelo terminal e o nome da biblioteca.
 import time as t
+from turtle import update
 from click import clear
 import pyodbc as p
 
 # conexão com o banco de dados, sem autenticação
-
-server = 'DESKTOP-J0U7P4K\SQLEXPRESS' # aqui voce digitao caminho do seu SQL, aqui esta assim: nome_meu_desktop\nome_do_meu_server
-database = 'modelagem' # aqui voce escreve qual banco de dados quer utilizar para o crud
-
+server = 'DESKTOP-J0U7P4K\SQLEXPRESS'
+database = 'modelagem'
 cnx = p.connect(
     'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';Trusted_connection=yes;')
 cursor = cnx.cursor()
 
 # funcoes:
 
+# Lista
+
+
 def valores():
     valor = '''
         SELECT * FROM vw_valor_final_oficina
     '''
     cursor.execute(valor)
-    # executa o comando no SQL
     for linha in cursor.fetchall():
         print(linha)
-    # quebra a linha para ficar mais organizado
-    
+
 
 def lista_clientes():
     cliente = '''
@@ -77,22 +76,21 @@ def lista_peca():
     cursor.execute(lista)
     for linha in cursor.fetchall():
         print(linha)
+# Fim Lista
 
 
+# Cadastro
 def cadastro_cliente():
     print('-' * 25, 'CADASTRO CLIENTE', '-' * 25)
     nomecl = str(input('Digite o Nome do(a) Cliente: '))
     sobrenomecl = str(input('Digite o Sobrenome do(a) Cliente: '))
     cep = str(input('Digite o CEP do(a) Cliente: '))
-    
-    # variaveis para executar um store procedure nalinha seguinte
-    
     inserircl = '''
        exec sp_cadastro_cliente_oficina '{}', '{}', '{}';
     '''.format(nomecl, sobrenomecl, cep)
     cursor.execute(inserircl)
     cursor.commit()
-    clear()   
+    clear()
     print('cliente cadastrado!')
     t.sleep(2)
 
@@ -215,54 +213,423 @@ def cadastro_venda():
         clear()
         print('\n Relação feita!')
         resp = str(input('Deseja adicionar outro orçamento neste pedido(s/n): '))
+# Fim Cadastro
+
+
+# Atualizar
+def atualizar_cliente():
+    clear()
+    print('-' * 25, 'ATUALIZAR CLIENTE', '-' * 25)
+    opcao = int(
+        input('\n 0 - Encerrar\n 1 - Atualizar Nome\n 2 - Atualizar CEP\n 3 - Atualizar tudo\n Digite a sua opção: '))
+
+    if opcao == 1:
+
+        idcliente = int(input('Digite o id do cliente que deseja trocar: '))
+        lista = '''
+            select * from cliente_oficina where id_cliente = {}
+        '''.format(idcliente)
+        cursor.execute(lista)
+
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = input('\nEste cliente que deseja modificar(s/n)?')
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR CLIENTE', '-' * 25)
+            nome = str(input('\nDigite o Primeiro nome do(a) cliente: '))
+            sobrenome = str(input('\nDigite o Sobrenome do(a) cliente: '))
+            update = '''
+                update cliente_oficina set nome = '{}', sobrenome = '{}' where id_cliente = {};
+            '''.format(nome, sobrenome, idcliente)
+            cursor.execute(update)
+            cursor.commit()
+            print('Nome alterado!')
+            cursor.execute(lista)
+
+        else:
+            clear()
+            atualizar_cliente()
+
+    if opcao == 2:
+        clear()
+        idcliente = int(input('Digite o id do cliente que deseja trocar: '))
+        lista = '''
+            select * from cliente_oficina where id_cliente = {}
+        '''.format(idcliente)
+        cursor.execute(lista)
+
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = input('\nEste cliente que deseja modificar(s/n)?')
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR CLIENTE', '-' * 25)
+            cep = str(input('\nDigite o novo CEP: '))
+            update = '''
+                update cliente_oficina set cep = '{}'where id_cliente = {};
+            '''.format(cep, idcliente)
+            cursor.execute(update)
+            cursor.commit()
+            print('CEP alterado!')
+            cursor.execute(lista)
+
+        if opcao == 3:
+            clear()
+            idcliente = int(
+                input('Digite o id do cliente que deseja trocar: '))
+            lista = '''
+                select * from cliente_oficina where id_cliente = {}
+            '''.format(idcliente)
+            cursor.execute(lista)
+
+            for linha in cursor.fetchall():
+                print(linha)
+
+            check = input('\nEste cliente que deseja modificar(s/n)?')
+
+            if check == 's':
+                clear()
+                print('-' * 25, 'ATUALIZAR CLIENTE', '-' * 25)
+                nome = str(input('\nDigite o Primeiro nome do(a) cliente: '))
+                sobrenome = str(input('\nDigite o Sobrenome do(a) cliente: '))
+                cep = str(input('\nDigite o novo CEP: '))
+                update = '''
+                    update cliente_oficina set nome = '{}', sobrenome = '{}', cep ='{}' where id_cliente = {};
+                '''.format(nome, sobrenome, cep, idcliente)
+                cursor.execute(update)
+                cursor.commit()
+                print('Cliente alterado!')
+                cursor.execute(lista)
+
+            else:
+                clear()
+                atualizar_cliente()
+
+        else:
+            clear()
+            atualizar_cliente()
+    else:
+        clear()
+
+
+def atualizar_veiculo():
+    clear()
+    print('-' * 25, 'ATUALIZAR VEICULO', '-' * 25)
+    opcao = int(
+        input(' 0 - Encerrar\n 1 - Atualizar Placa\n 2 - Atualizar Modelo e Marca\n 3 - Atualizar Ano:\n 4 - Atualizar tudo\n Digite a sua opção: '))
+
+    if opcao == 1:
+        clear()
+        print('-' * 25, 'ATUALIZAR VEICULO', '-' * 25)
+        idcarro = int(input('Digite o id do veiculo que deseja trocar: '))
+        lista = '''
+            select * from carro_oficina where id_carro = {}
+        '''.format(idcarro)
+        cursor.execute(lista)
+
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = input('\nEste veiculo que deseja modificar(s/n)?')
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR VEICULO', '-' * 25)
+            placa = str(input('\n Digite a nova Placa:'))
+            update = '''
+                update carro_oficina set placa = '{}' where id_carro = {}
+            '''.format(placa, idcarro)
+            cursor.execute(update)
+            cursor.commit()
+            cursor.execute(lista)
+            for linha in cursor.fetchall():
+                print(linha)
+
+            print('\nPlaca Atualizada!')
+
+        else:
+            clear()
+            atualizar_veiculo()
+
+
+def atualizar_peca():
+    clear()
+    print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+    opcao = int(
+        input(' 0 - Encerrar\n 1 - Atualizar Nome\n 2 - Atualizar Preço\n 3 - Atualizar Tudo\n Digite a sua opção: '))
+
+    if opcao == 1:
+        clear()
+        print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+        idpeca = int(input('Digite o id da peça: '))
+        lista = '''
+            select * from peca_oficina where id_peca = {}
+        '''.format(idpeca)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('\nEssa peça que deseja atualizar(s/n)? '))
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+            nome = str(input('Digite o novo nome da peça: '))
+            update = '''
+                update peca_oficina set nome = '{}' where id_peca = {}
+            '''.format(nome, idpeca)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            print('\n Nome alterado!')
+        else:
+            clear()
+            atualizar_peca()
+    if opcao == 2:
+        clear()
+        print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+        idpeca = int(input('Digite o id da peça: '))
+        lista = '''
+            select * from peca_oficina where id_peca = {}
+        '''.format(idpeca)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('\nEssa peça que deseja atualizar(s/n)? '))
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+            preco = float(input('Digite o novo preço da peça: '))
+            update = '''
+                update peca_oficina set valor_unidade = {} where id_peca = {}
+            '''.format(preco, idpeca)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            print('\n Valor alterado!')
+
+        else:
+            clear()
+            atualizar_peca()
+
+    if opcao == 3:
+        clear()
+        print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+        idpeca = int(input('Digite o id da peça: '))
+        lista = '''
+            select * from peca_oficina where id_peca = {}
+        '''.format(idpeca)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('\nEssa peça que deseja atualizar(s/n)? '))
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR PEÇA', '-' * 25)
+            nome = str(input('Digite o novo nome da peça: '))
+            preco = float(input('Digite o novo preço da peça: '))
+            update = '''
+                update peca_oficina set nome = '{}', preco = {} where id_peca = {}
+            '''.format(nome, preco, idpeca)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            print('\n Peça alterado!')
+        else:
+            clear()
+            atualizar_peca()
+
+
+def atualizar_orcamento():
+    clear()
+    print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+    opcao = int(
+        input(' 0 - Encerrar\n 1 - Atualizar Veiculo\n 2 - Atualizar Peça\n 3 - Atualizar Quantidade\n Digite a sua opção: '))
+
+    if opcao == 1:
+        clear()
+        print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+        idorcamento = int(input('Digite o id do orcamento: '))
+        lista = '''
+            select * from vw_orcamento_oficina where id_orcamento = {}
+        '''.format(idorcamento)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('Este orçamento que deseja alterar(s/n)?'))
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+            idveiculo = int(input('Digite o novo id do veiculo:'))
+            update = '''
+                update orcamento_oficina set id_carro = {} where id_orcamento = {}
+            '''.format(idveiculo, idorcamento)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            for linha in cursor.fetchall():
+                print(linha)
+
+            print('\nVeiculo Atualizado!')
+
+        else:
+            clear()
+            atualizar_orcamento()
+
+    if opcao == 2:
+        clear()
+        print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+        idorcamento = int(input('Digite o id do orcamento: '))
+        lista = '''
+            select * from vw_orcamento_oficina where id_orcamento = {}
+        '''.format(idorcamento)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('Este orçamento que deseja alterar(s/n)?'))
+
+        if check == 's':
+            clear()
+            print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+            idpeca = int(input('\nDigite o id da peça: '))
+            update = '''
+                update orcamento_oficina set id_carro = {} where id_orcamento = {}
+            '''.format(idpeca, idpeca)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            for linha in cursor.fetchall():
+                print(linha)
+
+            print('\n Peça Atualizada!')
+
+        else:
+            clear()
+            atualizar_orcamento()
+
+    if opcao == 3:
+        clear()
+        idorcamento = int(input('Digite o id do orcamento: '))
+        lista = '''
+            select * from vw_orcamento_oficina where id_orcamento = {}
+        '''.format(idorcamento)
+        cursor.execute(lista)
+        for linha in cursor.fetchall():
+            print(linha)
+
+        check = str(input('Este orçamento que deseja alterar(s/n)? '))
+        if check == 's':
+            print('-' * 25, 'ATUALIZAR ORÇAMENTO', '-' * 25)
+            qty = int(input('\nDigite a nova Quantidade: '))
+            update = '''
+                    update orcamento_oficina set quantidade = {} where id_orcamento = {}
+                '''.format(qty, idorcamento)
+            cursor.execute(update)
+            cursor.commit()
+            clear()
+            cursor.execute(lista)
+            for linha in cursor.fetchall():
+                print(linha)
+
+            print('\n Quantidade Atualizada!')
+        else:
+            clear()
+            atualizar_orcamento()
+    else:
+        clear()
 
 
 # menu via terminal:
-op = -1
-up = -1
-while op != 0 or up != 0:
+while True:
+    # valores default para as var
+    op = -1
+    cd = -1
+    up = -1
+    dl = -1
 
+    # menu
     logo = '''
-  ______    _______  __    ______  __  .__   __.      ___      
- /  __  \  |   ____||  |  /      ||  | |  \ |  |     /   \     
-|  |  |  | |  |__   |  | |  ,----'|  | |   \|  |    /  ^  \    
-|  |  |  | |   __|  |  | |  |     |  | |  . `  |   /  /_\  \   
-|  `--'  | |  |     |  | |  `----.|  | |  |\   |  /  _____  \  
- \______/  |__|     |__|  \______||__| |__| \__| /__/     \__\ 
-                                                               
+  ______    _______  __    ______  __  .__   __.      ___
+ /  __  \  |   ____||  |  /      ||  | |  \ |  |     /   \.
+|  |  |  | |  |__   |  | |  ,----'|  | |   \|  |    /  ^  \.
+|  |  |  | |   __|  |  | |  |     |  | |  . `  |   /  /_\  \.
+|  `--'  | |  |     |  | |  `----.|  | |  |\   |  /  _____  \.
+ \______/  |__|     |__|  \______||__| |__| \__| /__/     \__\.
+
     '''
+    # lista
     menu = '''
     {}
     Selecione uma opção para continuar:
-        
+
         0 - Encerrar.
         1 - Listar Vendas.
         2 - Listar Clientes.
-        3 - Listar Carros.
-        4 - Listar Clientes x Carro.
+        3 - Listar Veiculos.
+        4 - Listar Clientes x Veiculos.
         5 - Listar Pedidos.
         6 - Listar Orçamento.
         7 - Listar Peças.
     '''.format(logo)
+    # cadastro
     menu_cadastro = '''
     {}
     Selecione uma opção para continuar:
-        
+
         0 - Encerrar.
         1 - Cadastrar Cliente.
-        2 - Cadastrar Carro.
-        3 - Cadastrar Cliente e o Carro.
-        4 - Relacionar Cliente e o Carro.
+        2 - Cadastrar Veiuclo.
+        3 - Cadastrar Cliente e o Veiculo.
+        4 - Relacionar Cliente e o Veiculo.
         5 - Cadastrar Orçamento.
         6 - Cadastrar Peças.
         7 - Cadastrar Pedido.
-        8 - Relacionar Pedido e o Orçamento. 
+        8 - Relacionar Pedido e o Orçamento.
     '''.format(logo)
+    # update
+    menu_update = '''
+    {}
+    Selecione uma opção para continuar:
+
+        0 - Encerrar.
+        1 - Atualizar dados do(a) Cliente.
+        2 - Atualizar dados do Veículo.
+        3 - Atualizar Peça.
+        4 - Atualizar Orçamento.
+        5 x Atualizar Pedido.
+    '''.format(logo)
+    # delete
+    menu_delete = '''
+    {}
+    Selecione uma opção para continuar:
+
+        0 - Encerrar.
+        1 - A fazer ainda.
+    '''.format(logo)
+    # fim dos menus
 
     clear()
 
-    print('{}Selecione uma opção:\n(1-listar / 2-Cadastrar / 0 - Sair)'.format(logo))
-    print('\nDica: cadastre cliente e carro, faça a relação, orçamento, pedido e relacione pedido e orçamento.\n')
+    # tela inicial
+
+    print('{}Selecione uma opção:\n( 1-listar / 2-Cadastrar / 3 - Atualizar / 4 - Deletar / 0 - Sair )'.format(logo))
+    print('\nDica de cadastro: cadastre cliente e carro, faça a relação, orçamento, pedido e relacione pedido e orçamento e veja na lista o valor final.\n')
     resposta = int(input('Digite sua opção: '))
 
     if resposta == 1:
@@ -273,16 +640,26 @@ while op != 0 or up != 0:
     if resposta == 2:
         clear()
         print(menu_cadastro)
-        up = int(input('Digite sua opção:'))
+        cd = int(input('Digite sua opção: '))
 
-   # Sessão de Condições:
-    if op == 0 or up == 0 or resposta == 0:
+    if resposta == 3:
+        clear()
+        print(menu_update)
+        up = int(input('Digite sua opção: '))
+
+    if resposta == 4:
+        clear()
+        print(menu_delete)
+        dl = int(input('Digite sua opção: '))
+
+    # Sessão de Condições:
+    if op == 0 or cd == 0 or up == 0 or dl == 0 or resposta == 0:
         clear()
         print('Sistema Finalizado!')
         t.sleep(2)
         break
 
-    # Lista:
+    # select:
     if op == 1:
         clear()
         valores()
@@ -325,38 +702,54 @@ while op != 0 or up != 0:
         print('\n ID Peça - Nome - Valor unidade.')
         input('\nAperte Enter para continuar: ')
 
-    # Cadastro a finalizar ainda:
-    if up == 1:
+    # Cadastro:
+    if cd == 1:
         clear()
         cadastro_cliente()
 
-    if up == 2:
+    if cd == 2:
         clear()
         cadastro_carro()
 
-    if up == 3:
+    if cd == 3:
         clear()
         cadastro()
 
-    if up == 4:
+    if cd == 4:
         clear()
         cadastro_cr_cl()
 
-    if up == 5:
+    if cd == 5:
         clear()
         cadastro_orcamento()
 
-    if up == 6:
+    if cd == 6:
         clear()
         cadastro_peca()
 
-    if up == 7:
+    if cd == 7:
         clear()
         cadastro_pedido()
 
-    if up == 8:
+    if cd == 8:
         clear()
         cadastro_venda()
+
+    # Update
+    if up == 1:
+        atualizar_cliente()
+        input('\nAperte Enter para continuar: ')
+    if up == 2:
+        atualizar_veiculo()
+        input('\nAperte Enter para continuar: ')
+    if up == 3:
+        atualizar_peca()
+        input('\nAperte Enter para continuar: ')
+    if up == 4:
+        atualizar_orcamento()
+        input('\nAperte Enter para continuar: ')
+    if up == 5:
+        input('\nAperte Enter para continuar: ')
 
     t.sleep(1)
     clear()
